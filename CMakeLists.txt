@@ -12,6 +12,8 @@ add_executable(Brute ${CommonFiles} "brute/brute.cpp")
 
 IF (WIN32)
     add_executable(CreateThread ${CommonFiles} create_thread/create_thread.cpp)
+    add_executable(CreateProcess ${CommonFiles} create_process/create_process.cpp)
+    target_link_libraries(CreateProcess ws2_32)
 ENDIF ()
 
 if (UNIX)
