@@ -3,59 +3,41 @@
 //
 
 #include "windows.h"
-#include <functional>
 #include <iostream>
 #include <thread>
-#include "../function.h"
+#include "../utils.h"
 
 using namespace std;
 
-struct thread_data {
-    std::function<double(double)> func;
-    double x_start{};
-    double x_end{};
-    point res{};
-
-    thread_data() = default;
-
-    thread_data(std::function<double(double)> func, double x_start, double x_end) : func(std::move(func)),
-                                                                                    x_start(x_start),
-                                                                                    x_end(x_end) {}
-};
-
-auto get_lambda() {
-    return [](LPVOID arg) -> DWORD {
-        auto *data = (thread_data *) arg;
-        double max = -numeric_limits<double>::infinity();
-        double x = data->x_start;
-        double max_x;
-        while (x <= data->x_end) {
-            double y = data->func(x);
-            if (y > max) {
-                max = y;
-                max_x = x;
-            }
-            x += 1E-4;
+DWORD WINAPI thread_func(void *arg) {
+    auto *data = (thread_data *) arg;
+    double max = -numeric_limits<double>::infinity();
+    double x = data->x_start;
+    double max_x;
+    while (x <= data->x_end) {
+        double y = data->func(x);
+        if (y > max) {
+            max = y;
+            max_x = x;
         }
-        data->res.x = max_x;
-        data->res.y = max;
-        return 0;
-    };
-}
+        x += 1E-4;
+    }
+    data->res.x = max_x;
+    data->res.y = max;
+    return 0;
+};
 
 point find_max_create_thread(double func(double), unsigned int threads_count) {
     HANDLE handles[threads_count];
     DWORD thread_ids[threads_count];
     thread_data thread_data_list[threads_count];
-    auto thread_function = get_lambda();
-
     for (int i = 0; i < threads_count; ++i) {
         double part = RANGE / threads_count;
         thread_data_list[i] = thread_data(func, part * i, part * (i + 1));
         handles[i] = CreateThread(
                 nullptr,
                 0,
-                thread_function,
+                thread_func,
                 &thread_data_list[i],
                 0,
                 &thread_ids[i]

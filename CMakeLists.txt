@@ -2,10 +2,19 @@ cmake_minimum_required(VERSION 3.16)
 project(Parallel_programming)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CommonFiles "function.cpp" "function.h")
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+set(CommonFiles "function.cpp" "function.h" "utils.h")
 
-add_executable(Brute ${CommonFiles} "lab1/brute.cpp")
+find_package(Threads REQUIRED)
+
+add_executable(Brute ${CommonFiles} "brute/brute.cpp")
 
 IF (WIN32)
-    add_executable(CreateThread ${CommonFiles} lab2/create_thread.cpp)
+    add_executable(CreateThread ${CommonFiles} create_thread/create_thread.cpp)
 ENDIF ()
+
+if (UNIX)
+    add_executable(PthreadCreate ${CommonFiles} pthread_create/pthread_create.cpp)
+    target_link_libraries(PthreadCreate Threads::Threads)
+endif (UNIX)
