@@ -7,7 +7,7 @@
 
 SOCKET start_server(unsigned int threads_count);
 
-point find_max_create_thread(unsigned int threads_count, char *command);
+point find_max_create_process(unsigned int threads_count, char *command);
 
 void process_message(SOCKET listening_socket, point *responses);
 

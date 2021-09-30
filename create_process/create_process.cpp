@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
         const auto processor_count = thread::hardware_concurrency();
         cout << "CreateProcess()" << endl;
         auto start = chrono::steady_clock::now();
-        auto point = find_max_create_thread(processor_count, argv[0]);
+        auto point = find_max_create_process(processor_count, argv[0]);
         auto end = chrono::steady_clock::now();
         cout << "X: " << point.x << " Y: " << point.y << endl;
         cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
@@ -134,10 +134,9 @@ SOCKET start_server(unsigned int threads_count) {
 }
 
 
-point find_max_create_thread(unsigned int threads_count, char *command) {
+point find_max_create_process(unsigned int threads_count, char *command) {
 
     SOCKET socket = start_server(threads_count);
-
 
     point responses[threads_count];
     for (int i = 0; i < threads_count; ++i) {
