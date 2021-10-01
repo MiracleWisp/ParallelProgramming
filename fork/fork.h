@@ -5,11 +5,11 @@
 #ifndef PARALLEL_PROGRAMMING_CREATE_PROCESS_H
 #define PARALLEL_PROGRAMMING_CREATE_PROCESS_H
 
-SOCKET start_server(unsigned int threads_count);
+int start_server(unsigned int threads_count);
 
-point find_max_create_process(unsigned int threads_count, char *command);
+point find_max_fork(double func(double), unsigned int threads_count);
 
-void process_message(SOCKET listening_socket, point *responses);
+void process_message(int listening_socket, point *responses);
 
 void send_result(int id, point result);
 

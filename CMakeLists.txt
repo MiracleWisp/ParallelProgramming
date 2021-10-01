@@ -13,6 +13,7 @@ add_executable(StdThread ${CommonFiles} "std_thread/std_thread.cpp")
 
 IF (WIN32)
     add_executable(CreateThread ${CommonFiles} "create_thread/create_thread.cpp")
+
     add_executable(CreateProcess ${CommonFiles} "create_process/create_process.h" "create_process/create_process.cpp")
     target_link_libraries(CreateProcess ws2_32)
 ENDIF ()
@@ -20,4 +21,8 @@ ENDIF ()
 if (UNIX)
     add_executable(PthreadCreate ${CommonFiles} "pthread_create/pthread_create.cpp")
     target_link_libraries(PthreadCreate Threads::Threads)
+
+    target_link_libraries(StdThread Threads::Threads)
+
+    add_executable(Fork ${CommonFiles} fork/fork.h fork/fork.cpp)
 endif (UNIX)

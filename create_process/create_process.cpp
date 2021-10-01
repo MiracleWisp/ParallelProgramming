@@ -2,10 +2,6 @@
 // Created by s-uch on 29.09.2021.
 //
 
-//
-// Created by s-uch on 27.09.2021.
-//
-
 #include <iostream>
 #include <sstream>
 #include <thread>
@@ -19,6 +15,26 @@
 #define DEFAULT_BUFLEN 512
 
 using namespace std;
+
+
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        /* PARENT */
+        const auto processor_count = thread::hardware_concurrency();
+        cout << "CreateProcess()" << endl;
+        auto start = chrono::steady_clock::now();
+        auto point = find_max_create_process(processor_count, argv[0]);
+        auto end = chrono::steady_clock::now();
+        cout << "X: " << point.x << " Y: " << point.y << endl;
+        cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
+    } else {
+        /* CHILD */
+        point result = find_max_in_range(func, stod(argv[1]), stod(argv[2]));
+        send_result(atoi(argv[0]), result);
+    }
+
+    return 0;
+}
 
 point find_max_in_range(double func(double), double start, double end) {
     point result{
@@ -82,25 +98,6 @@ void send_result(int id, point result) {
     // cleanup
     closesocket(ConnectSocket);
     WSACleanup();
-}
-
-int main(int argc, char *argv[]) {
-    if (argc == 1) {
-        /* PARENT */
-        const auto processor_count = thread::hardware_concurrency();
-        cout << "CreateProcess()" << endl;
-        auto start = chrono::steady_clock::now();
-        auto point = find_max_create_process(processor_count, argv[0]);
-        auto end = chrono::steady_clock::now();
-        cout << "X: " << point.x << " Y: " << point.y << endl;
-        cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
-    } else {
-        /* CHILD */
-        point result = find_max_in_range(func, stod(argv[1]), stod(argv[2]));
-        send_result(atoi(argv[0]), result);
-    }
-
-    return 0;
 }
 
 SOCKET start_server(unsigned int threads_count) {
