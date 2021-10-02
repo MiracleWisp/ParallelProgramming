@@ -5,6 +5,9 @@
 #ifndef PARALLEL_PROGRAMMING_CREATE_PROCESS_H
 #define PARALLEL_PROGRAMMING_CREATE_PROCESS_H
 
+#include "../utils.h"
+#include <winsock2.h>
+
 SOCKET start_server(unsigned int threads_count);
 
 point find_max_create_process(unsigned int threads_count, char *command);

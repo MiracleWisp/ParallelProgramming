@@ -19,10 +19,17 @@ IF (WIN32)
 ENDIF ()
 
 if (UNIX)
+    SET(CMAKE_C_COMPILER mpicc)
+    SET(CMAKE_CXX_COMPILER mpicxx)
+    find_package(MPI REQUIRED)
+    include_directories(${MPI_INCLUDE_PATH})
+
     add_executable(PthreadCreate ${CommonFiles} "pthread_create/pthread_create.cpp")
     target_link_libraries(PthreadCreate Threads::Threads)
 
     target_link_libraries(StdThread Threads::Threads)
 
     add_executable(Fork ${CommonFiles} fork/fork.h fork/fork.cpp)
+
+    add_executable(MPI ${CommonFiles} "mpi/mpi.cpp" mpi/mpi.h)
 endif (UNIX)
