@@ -32,4 +32,8 @@ if (UNIX)
     add_executable(Fork ${CommonFiles} fork/fork.h fork/fork.cpp)
 
     add_executable(MPI ${CommonFiles} "mpi/mpi.cpp" mpi/mpi.h)
+
+    find_package(OpenMP REQUIRED)
+    add_executable(OpenMP ${CommonFiles} omp/omp.cpp)
+    target_link_libraries(OpenMP OpenMP::OpenMP_CXX)
 endif (UNIX)
